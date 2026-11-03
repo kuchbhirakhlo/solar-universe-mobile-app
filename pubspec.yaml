@@ -1,0 +1,104 @@
+name: solaruniverse
+description: "Solar Universe - Solar EPC mobile app"
+publish_to: 'none'
+version: 1.0.0+7
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+
+  # Firebase
+  firebase_core: ^3.6.0
+  cloud_firestore: ^5.4.4
+  firebase_auth: ^5.3.1
+  firebase_storage: ^12.3.4
+
+  # PDF quotation export
+  pdf: ^3.11.1
+  printing: ^5.13.3
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  image_picker: ^1.1.2
+
+  # Document uploads (PAN/Aadhaar/etc. — images + PDF, multi-select)
+  # Pinned to >=11.0.0: file_picker 8.x hardcodes compileSdk 34 in its own
+  # build.gradle (doesn't respect app-level overrides), which conflicts with
+  # a newer transitive flutter_plugin_android_lifecycle requiring 36+.
+  file_picker: ^11.0.2
+
+  # Navigation
+  go_router: ^14.3.0
+
+  # DI
+  get_it: ^8.0.2
+
+  # Local Storage
+  shared_preferences: ^2.3.2
+
+  # Staff live location (continues while minimized via Android FGS / iOS background location)
+  geolocator: ^13.0.2
+
+  # Utils
+  dartz: ^0.10.1
+  cached_network_image: ^3.4.1
+  url_launcher: ^6.3.1
+  intl: ^0.19.0
+  connectivity_plus: ^6.0.5
+
+  # UI
+  cupertino_icons: ^1.0.8
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.4
+  flutter_native_splash: ^2.4.1
+  flutter_launcher_icons: ^0.14.1
+  fake_cloud_firestore: ^3.1.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+
+  # REM — the reference website's own font (Google Fonts, OFL), bundled so the
+  # app doesn't depend on a runtime fetch. Variable font: one file, wght 100-900.
+  fonts:
+    - family: REM
+      fonts:
+        - asset: assets/fonts/REM-Variable.ttf
+
+# assets/images/launch_icon.png is the sun/globe/bulb/panel glyph cropped out
+# of the real solar_win_logo.png wordmark (that source file is a wide
+# lockup, not square — the glyph was cropped with Python/Pillow and padded
+# onto a white 1024x1024 canvas). assets/images/launch_icon_adaptive.png is
+# the same glyph scaled down further and centered, for Android's
+# ~66%-centered adaptive-icon safe zone.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/launch_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/launch_icon_adaptive.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/launch_icon_adaptive.png
+  android_12:
+    image: assets/images/launch_icon_adaptive.png
+    icon_background_color: "#FFFFFF"
+    color: "#FFFFFF"
+  web: false

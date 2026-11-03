@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Role checks use Firebase Auth custom claims, not a cross-service
+    // Firestore lookup (firestore.exists(...)) — that pattern works fine
+    // inside Firestore's own rules, but on this project the same call made
+    // *from* Storage rules consistently returned "Permission denied" even
+    // for a hardcoded, known-good document path (verified end-to-end via
+    // REST). Claims are set by scripts/provision_staff_auth.js.
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isStaff() {
+      return request.auth != null && request.auth.token.staff == true;
+    }
+
+    function isAllowedFile() {
+      return request.resource.size < 10 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/.*|application/pdf');
+    }
+
+    // Solar customer KYC documents (PAN, Aadhaar, electricity bill, bank
+    // proof, rooftop photos, property documents) — staff/admin only.
+    //
+    // create/update are checked against isAllowedFile() (size + content-type),
+    // but delete is split out separately: on a delete request.resource is
+    // null, so calling isAllowedFile() (which reads request.resource.size /
+    // .contentType) throws and the rule evaluates to false — bundling delete
+    // into a single `allow write` silently blocks every delete.
+    match /customers/{customerId}/{fileName} {
+      allow read: if isStaff() || isAdmin();
+      allow create, update: if (isStaff() || isAdmin()) && isAllowedFile();
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    // Site photo attached to a staff-created enquiry — staff/admin only.
+    match /enquiries/{enquiryId}/{fileName} {
+      allow read: if isStaff() || isAdmin();
+      allow create, update: if (isStaff() || isAdmin()) && isAllowedFile();
+      allow delete: if isStaff() || isAdmin();
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "solaruniverse-fef74",
+          "appId": "1:118071509177:android:8150cf5dd733bb8452db68",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "solaruniverse-fef74",
+          "configurations": {
+            "android": "1:118071509177:android:8150cf5dd733bb8452db68",
+            "ios": "1:118071509177:ios:8150cf5dd733bb8452db68",
+            "web": "1:118071509177:web:45de066c904596f052db68"
+          }
+        }
+      }
+    }
+  }
+}

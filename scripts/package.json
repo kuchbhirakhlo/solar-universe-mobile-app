@@ -1,0 +1,9 @@
+{
+  "name": "solaruniverse-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-off admin scripts for the Solarwin Technologies Firebase project",
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

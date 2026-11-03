@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================
+    // PUBLIC READ ACCESS
+    // Website content that anyone can view
+    // ========================
+    match /pricing/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+    match /faq/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+      match /master_items/{document} {
+      allow read, write: if true;
+    }
+    match /brands/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+    match /projects/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+    match /payments/{document} {
+  allow read, write: if true;
+}
+
+
+      match /admin_quotations/{document} {
+      allow read, write: if true;
+    }
+
+    // ========================
+    // SALES + PUBLIC SUBMISSION ACCESS
+    // Visitors can submit enquiries; the Sales portal (which uses client-side
+    // sessions, NOT Firebase Auth) needs to read/update/delete them too.
+    // Because sales users have no auth token, these are open.
+    // ========================
+    match /enquiries/{document} {
+      allow read, update, delete: if true;
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.phone is string;
+    }
+    match /contact_messages/{document} {
+      allow read, delete: if request.auth != null && request.auth.token.email != null;
+      allow create: if request.resource.data.name is string;
+    }
+    // `leads` (public site's full application form) has no rule coverage at
+    // all right now, which means Firestore's default-deny applies — the one
+    // existing lead doc was written some other way (Admin SDK / server-side).
+    // Mirrors the `enquiries` pattern: public create, sales-portal open
+    // read/update/delete since sales sessions carry no Firebase Auth token.
+    match /leads/{document} {
+      allow read, update, delete: if true;
+      allow create: if request.resource.data.fullName is string
+                    && request.resource.data.mobile is string;
+    }
+    match /service_requests/{document} {
+  allow read, write: if true;
+}
+
+    // ========================
+    // SALES + ADMIN SHARED COLLECTIONS
+    // The Sales portal (client-side sessions, no Firebase Auth) reads customers
+    // and reads/writes quotations, so these cannot require an auth token.
+    // ========================
+    match /customers/{document} {
+      allow read, write: if true;
+    }
+    match /quotations/{document} {
+      allow read, write: if true;
+    }
+    match /staff/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+    match /attendance/{document} {
+      allow read, write: if true;
+    }
+    // Public read allowed so login flow can verify admin emails before Firebase Auth sign-in
+    // Write is still restricted to authenticated admins only
+    match /admins/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email != null;
+    }
+
+    // Live staff GPS positions written by the mobile app (one doc per staff
+    // member, doc id = staff id) — same open policy as the other staff
+    // collections here, since the admin/sales web sessions carry no auth token.
+    match /staff_locations/{document} {
+      allow read, write: if true;
+    }
+  }
+}

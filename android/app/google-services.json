@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118071509177",
+    "project_id": "solaruniverse-fef74",
+    "storage_bucket": "solaruniverse-fef74.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118071509177:android:8150cf5dd733bb8452db68",
+        "android_client_info": {
+          "package_name": "com.solaruniverse.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6eoGNiRqgZAMNBpdZ8wAvGF1ng9Oj6yM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
