@@ -43,9 +43,17 @@ class _SolarUniverseAppState extends State<SolarUniverseApp> with WidgetsBinding
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // paused = minimized — keep tracking. detached = process going away.
-    if (state == AppLifecycleState.detached) {
-      unawaited(sl<StaffLocationTracker>().stop());
+    final tracker = sl<StaffLocationTracker>();
+    switch (state) {
+      case AppLifecycleState.resumed:
+        unawaited(tracker.ensureRunning(sl<StaffSession>().current));
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+        // Minimized or switching apps — do not stop; Android FGS + iOS background keep GPS on.
+        break;
+      case AppLifecycleState.detached:
+        unawaited(tracker.stop());
     }
   }
 

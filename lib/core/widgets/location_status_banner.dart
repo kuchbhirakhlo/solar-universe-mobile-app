@@ -38,7 +38,7 @@ class LocationStatusBanner extends StatelessWidget {
                 child: Text(
                   serviceOff
                       ? 'Location is turned off. Turn it on so the office can see your position.'
-                      : 'Location permission is needed so the office can see your position.',
+                      : 'Allow location (prefer "Always" on iPhone) so tracking works when the app is minimized.',
                   style: AppTypography.bodySmall.copyWith(color: AppColors.textPrimary),
                 ),
               ),

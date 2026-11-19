@@ -26,6 +26,18 @@ const auth = getAuth();
   console.log(`staff_locations docs: ${locs.size}`);
   locs.forEach((d) => console.log(' ', d.id, JSON.stringify(d.data())));
 
+  const snaps = await db.collection('staff_location_snapshots').orderBy('capturedAt', 'desc').limit(5).get();
+  console.log(`\nstaff_location_snapshots (latest 5 of ${snaps.size} shown):`);
+  snaps.forEach((d) => console.log(' ', d.id, JSON.stringify(d.data())));
+
+  const today = new Date().toISOString().slice(0, 10);
+  const travel = await db.collection('staff_daily_travel').where('date', '==', today).get();
+  console.log(`\nstaff_daily_travel for ${today}: ${travel.size} doc(s)`);
+  for (const d of travel.docs) {
+    const pts = await d.ref.collection('points').count().get();
+    console.log(' ', d.id, JSON.stringify(d.data()), `points=${pts.data().count}`);
+  }
+
   const client = await new GoogleAuth({
     credentials: sa,
     scopes: ['https://www.googleapis.com/auth/cloud-platform', 'https://www.googleapis.com/auth/firebase'],
@@ -40,7 +52,6 @@ const auth = getAuth();
   console.log('rules mention staff_locations:', i !== -1);
   if (i !== -1) console.log(src.slice(i - 12, i + 90).replace(/\n/g, ' '));
 
-  const today = new Date().toISOString().slice(0, 10);
   const staff = await db.collection('staff').get();
   console.log(`\nstaff (${staff.size}), attendance date ${today}:`);
   for (const d of staff.docs) {

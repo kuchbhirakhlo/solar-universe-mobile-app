@@ -94,5 +94,16 @@ service cloud.firestore {
     match /staff_locations/{document} {
       allow read, write: if true;
     }
+    // Half-hourly snapshots + login fixes (admin travel timeline).
+    match /staff_location_snapshots/{document} {
+      allow read, write: if true;
+    }
+    // Per-day km totals and route points for admin reports.
+    match /staff_daily_travel/{document} {
+      allow read, write: if true;
+      match /points/{pointId} {
+        allow read, write: if true;
+      }
+    }
   }
 }

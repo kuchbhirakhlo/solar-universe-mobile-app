@@ -29,7 +29,7 @@ class AppDropdownField<T> extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
         ],
         DropdownButtonFormField<T>(
-          initialValue: value,
+          value: items.contains(value) ? value : null,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
           style: AppTypography.bodyLarge.copyWith(color: AppColors.textPrimary),
